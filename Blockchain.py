@@ -65,7 +65,7 @@ class Blockchain:
     def serialize_chain(self):
         blockchain_dict = [block.serialize() for block in self.chain]
         return json.dumps(blockchain_dict,indent=1)
-
+    
 
 # Example usage
 my_blockchain = Blockchain(difficulty=3)
