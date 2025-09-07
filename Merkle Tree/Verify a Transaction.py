@@ -47,7 +47,7 @@ def verify_transaction(tx, proof, merkle_root):
         print(f"Step {i+1}: hash({current_hash} + {sibling_hash})")
         current_hash = hash_data(current_hash + sibling_hash)
     print("Computed Root:", current_hash)
-    print("Merkle Root:   ", merkle_root)
+    print("Merkle Root:   ", merkle_rooot)
     return current_hash == merkle_root
 
 # Example transactions
@@ -77,4 +77,4 @@ for i, (current, sibling) in enumerate(path):
 
 # Verify transaction
 is_valid = verify_transaction("txdf1", proof, merkle_root)
-print("\nTransaction 'txdf1' Valid:", is_valid)
+print("\nTransaction 'txd' Valid:", is_valid)
