@@ -29,16 +29,22 @@ def merkle_root(transactions):
     return hashes[0]  # Final Merkle Root
 
 
-# Example usage
-transactions = [
-    "tx1: Alice pays Bob 5 BTC",
-    "tx2: Bob pays Charlie 2 BTC",
-    "tx3: Charlie pays Dave 1 BTC",
-    "tx4: Dave pays Eve 0.5 BTC"
-]
+# ---- Main program ----
+transactions = []
 
+# Ask user for number of transactions
+n = int(input("Enter number of transactions: "))
+
+# Take transaction inputs
+for i in range(n):
+    tx = input(f"Enter transaction {i+1}: ")
+    transactions.append(tx)
+
+# Compute Merkle Root
 root = merkle_root(transactions)
-print("Merkle Root:", root)
+
+# Print results
+print("\nMerkle Root:", root)
 print("Transactions:")
 for tx in transactions:
     print(" -", tx)

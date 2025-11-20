@@ -31,12 +31,13 @@ def get_proof(transactions, tx_index):
     tree = build_merkle_tree(transactions)
     proof = []
     index = tx_index
-    path = []  # for showing verification path
-    for layer in tree[:-1]:  # skip root
+    path = []
+    for layer in tree[:-1]:
         sibling_index = index + 1 if index % 2 == 0 else index - 1
-        proof.append(layer[sibling_index])
-        path.append((layer[index], layer[sibling_index]))  # (current, sibling)
-        index = index // 2
+        if sibling_index < len(layer):
+            proof.append(layer[sibling_index])
+            path.append((layer[index], layer[sibling_index]))
+        index //= 2
     return proof, path
 
 # Verify a transaction using proof
@@ -44,14 +45,23 @@ def verify_transaction(tx, proof, merkle_root):
     current_hash = hash_data(tx)
     print("\nVerification Path:")
     for i, sibling_hash in enumerate(proof):
-        print(f"Step {i+1}: hash({current_hash} + {sibling_hash})")
-        current_hash = hash_data(current_hash + sibling_hash)
+        if i % 2 == 0:  # assume tx was on left side
+            current_hash = hash_data(current_hash + sibling_hash)
+        else:           # assume tx was on right side
+            current_hash = hash_data(sibling_hash + current_hash)
+        print(f"Step {i+1}: {current_hash}")
     print("Computed Root:", current_hash)
-    print("Merkle Root:   ", merkle_rooot)
+    print("Merkle Root:  ", merkle_root)
     return current_hash == merkle_root
 
-# Example transactions
-transactions = ["tx1", "tx2", "tx3", "tx4"]
+
+# ---------------- MAIN PROGRAM ----------------
+# Take input transactions
+transactions = []
+n = int(input("Enter number of transactions: "))
+for i in range(n):
+    tx = input(f"Enter transaction {i+1}: ")
+    transactions.append(tx)
 
 # Build tree and get Merkle Root
 tree = build_merkle_tree(transactions)
@@ -61,20 +71,20 @@ merkle_root = tree[-1][0]
 print_merkle_tree(tree)
 print("Merkle Root:", merkle_root)
 
-# Transaction to verify
-tx_index = 0  # "tx1"
-proof, path = get_proof(transactions, tx_index)
+# Ask user for transaction to verify
+tx_to_verify = input("\nEnter a transaction to verify: ")
 
-# Print Merkle Proof
-print("\nMerkle Proof for transaction 'tx1':")
-for i, p in enumerate(proof):
-    print(f"Sibling at step {i+1}: {p}")
+if tx_to_verify in transactions:
+    tx_index = transactions.index(tx_to_verify)
+    proof, path = get_proof(transactions, tx_index)
 
-# Print path of transaction to root
-print("\nTransaction Path to Root:")
-for i, (current, sibling) in enumerate(path):
-    print(f"Step {i+1}: Current={current}, Sibling={sibling}")
+    # Print Merkle Proof
+    print("\nMerkle Proof for transaction:", tx_to_verify)
+    for i, p in enumerate(proof):
+        print(f"Sibling at step {i+1}: {p}")
 
-# Verify transaction
-is_valid = verify_transaction("txdf1", proof, merkle_root)
-print("\nTransaction 'txd' Valid:", is_valid)
+    # Verify transaction
+    is_valid = verify_transaction(tx_to_verify, proof, merkle_root)
+    print("\nTransaction Valid:", is_valid)
+else:
+    print("\nTransaction not found in list! ❌")

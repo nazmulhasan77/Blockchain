@@ -8,31 +8,26 @@ private_key = rsa.generate_private_key(
     public_exponent=65537,
     key_size=2048
 )
+print("Private Key generated.", private_key)
 public_key = private_key.public_key()
-
+print("Public Key generated.", public_key)
 # ------------------ Message ------------------
 message = b"This is a secret message"
 
-# ------------------ 'Encrypt' with Private Key (Sign) ------------------
+# ------------------ 'Private Key (Sign) ------------------
 signature = private_key.sign(
     message,
-    padding.PSS(
-        mgf=padding.MGF1(hashes.SHA256()),
-        salt_length=padding.PSS.MAX_LENGTH
-    ),
+    padding.PKCS1v15(), 
     hashes.SHA256()
 )
 print("Signature (hex):", signature.hex())
-
-# ------------------ 'Decrypt' with Public Key (Verify) ------------------
+message = b"This is a secret message Intercepted"
+# ------------------ 'Public Key (Verify) ------------------
 try:
     public_key.verify(
-        signature,   # "decrypted" here means verification
+        signature,  
         message,
-        padding.PSS(
-            mgf=padding.MGF1(hashes.SHA256()),
-            salt_length=padding.PSS.MAX_LENGTH
-        ),
+        padding.PKCS1v15(),
         hashes.SHA256()
     )
     print("✅ Signature is valid!")

@@ -53,8 +53,8 @@ if __name__ == "__main__":
     original_root = get_merkle_root_from_file(filename)
 
     # Simulate tampering: modify the file slightly
-    with open(filename, "a", encoding="utf-8") as f:
-        f.write("\nTampered content!")  # Add extra text
+    # with open(filename, "a", encoding="utf-8") as f:
+    #     f.write("\nTampered content!")  # Add extra text
 
     print("\n--- After Tampering ---")
     tampered_root = get_merkle_root_from_file(filename)
