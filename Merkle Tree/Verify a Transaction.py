@@ -85,6 +85,6 @@ if tx_to_verify in transactions:
 
     # Verify transaction
     is_valid = verify_transaction(tx_to_verify, proof, merkle_root)
-    print("\nTransaction Valid:", is_valid)
+    print("\nTransaction Valid")
 else:
     print("\nTransaction not found in list! ❌")
