@@ -1,0 +1,190 @@
+
+
+(a)
+
+./network.sh down
+./network.sh up createChannel -c mychannel
+./network.sh deployCCAAS -ccn mychaincode -ccp ../../chaincode -ccv 1 -ccl go -c mychannel
+
+export PATH=${PWD}/../bin:$PATH
+export FABRIC_CFG_PATH=$PWD/../config/
+source ./scripts/envVar.sh
+setGlobals 1
+
+/***  Command Explanation
+
+-o localhost:7050 = address of the orderer node.
+Hostname used for TLS verification.
+--tls \ Enables TLS (Transport Layer Security) for secure communication.
+Path to the TLS CA certificate of the orderer (Used to verify the orderer’s identity). 
+channel name → mychannel.
+chaincode (smart contract) → mychaincode
+Address of peer0 of Org1.
+TLS certificate of Org1 peer. 
+tlsRootCertFiles- Used to securely communicate with that peer.
+Address of peer0 of Org2.
+tlsRootCertFiles- Used to securely communicate with that peer.
+Function with argument for Query
+
+***/
+
+(b) Create  asset
+
+---> ast1-Dell Laptop-65000-Alice
+---> ast2-Toyota Car-1850000-Alice
+---> ast3-Leather Backpack-3200-Alice
+---> ast4-Mountain Bicycle-28000-Alice
+---> ast5-Apartment(2BHK)-6500000-Alice
+
+peer chaincode invoke -o localhost:7050 \
+  --ordererTLSHostnameOverride orderer.example.com \
+  --tls \
+  --cafile ${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem \
+  -C mychannel \
+  -n mychaincode \
+  --peerAddresses localhost:7051 \
+  --tlsRootCertFiles ${PWD}/organizations/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt \
+  --peerAddresses localhost:9051 \
+  --tlsRootCertFiles ${PWD}/organizations/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt \
+  -c '{"function":"CreateAsset","Args":["ast1","Dell Laptop","65000","Alice"]}'
+
+peer chaincode invoke -o localhost:7050 \
+  --ordererTLSHostnameOverride orderer.example.com \
+  --tls \
+  --cafile ${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem \
+  -C mychannel \
+  -n mychaincode \
+  --peerAddresses localhost:7051 \
+  --tlsRootCertFiles ${PWD}/organizations/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt \
+  --peerAddresses localhost:9051 \
+  --tlsRootCertFiles ${PWD}/organizations/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt \
+  -c '{"function":"CreateAsset","Args":["ast2","Toyota Car","1850000","Alice"]}'
+
+
+
+  peer chaincode invoke -o localhost:7050 \
+  --ordererTLSHostnameOverride orderer.example.com \
+  --tls \
+  --cafile ${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem \
+  -C mychannel \
+  -n mychaincode \
+  --peerAddresses localhost:7051 \
+  --tlsRootCertFiles ${PWD}/organizations/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt \
+  --peerAddresses localhost:9051 \
+  --tlsRootCertFiles ${PWD}/organizations/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt \
+  -c '{"function":"CreateAsset","Args":["ast3","Leather Backpack","3200","Alice"]}'
+
+
+
+  peer chaincode invoke -o localhost:7050 \
+  --ordererTLSHostnameOverride orderer.example.com \
+  --tls \
+  --cafile ${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem \
+  -C mychannel \
+  -n mychaincode \
+  --peerAddresses localhost:7051 \
+  --tlsRootCertFiles ${PWD}/organizations/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt \
+  --peerAddresses localhost:9051 \
+  --tlsRootCertFiles ${PWD}/organizations/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt \
+  -c '{"function":"CreateAsset","Args":["ast4","Mountain Bicycle","28000","Alice"]}'
+
+
+  peer chaincode invoke -o localhost:7050 \
+  --ordererTLSHostnameOverride orderer.example.com \
+  --tls \
+  --cafile ${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem \
+  -C mychannel \
+  -n mychaincode \
+  --peerAddresses localhost:7051 \
+  --tlsRootCertFiles ${PWD}/organizations/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt \
+  --peerAddresses localhost:9051 \
+  --tlsRootCertFiles ${PWD}/organizations/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt \
+  -c '{"function":"CreateAsset","Args":["ast5","Apartment(2BHK)","6500000","Alice"]}'
+
+(i) Display all asset
+peer chaincode query -C mychannel -n mychaincode -c '{"Args":["GetAllAssets"]}'
+
+(ii) Transfer Asset ast1 Alice -> Bob
+peer chaincode invoke \
+    -o localhost:7050 \
+    --ordererTLSHostnameOverride orderer.example.com \
+    --tls \
+    --cafile ${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem \
+    -C mychannel \
+    -n mychaincode \
+    --peerAddresses localhost:7051 \
+    --tlsRootCertFiles ${PWD}/organizations/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt \
+    --peerAddresses localhost:9051 \
+    --tlsRootCertFiles ${PWD}/organizations/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt \
+    -c '{"function":"TransferAsset","Args":["ast1","Bob"]}'
+
+(iii) Transfer Asset ast2 Alice -> Charlie
+peer chaincode invoke \
+    -o localhost:7050 \
+    --ordererTLSHostnameOverride orderer.example.com \
+    --tls \
+    --cafile ${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem \
+    -C mychannel \
+    -n mychaincode \
+    --peerAddresses localhost:7051 \
+    --tlsRootCertFiles ${PWD}/organizations/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt \
+    --peerAddresses localhost:9051 \
+    --tlsRootCertFiles ${PWD}/organizations/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt \
+    -c '{"function":"TransferAsset","Args":["ast2","Charlie"]}'
+
+
+(iv) Update Asset Price ast1 - Dell Laptop-80000
+peer chaincode invoke \
+    -o localhost:7050 \
+    --ordererTLSHostnameOverride orderer.example.com \
+    --tls \
+    --cafile ${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem \
+    -C mychannel \
+    -n mychaincode \
+    --peerAddresses localhost:7051 \
+    --tlsRootCertFiles ${PWD}/organizations/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt \
+    --peerAddresses localhost:9051 \
+    --tlsRootCertFiles ${PWD}/organizations/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt \
+    -c '{"function":"UpdateAssetPrice","Args":["ast1","80000"]}'
+
+
+(v). Display the transaction history of asset-ast1
+peer chaincode query -C mychannel -n mychaincode -c '{"Args":["GetAssetHistory","ast1"]}'
+
+Display the asset-ast1
+peer chaincode query -C mychannel -n mychaincode -c '{"Args":["ReadAsset","ast1"]}'
+
+(vi) Display Channel name
+
+peer channel list
+peer lifecycle chaincode queryinstalled
+
+
+(vii) Transfer a non existing asset (eg.  ast10) --> Nazmul
+
+peer chaincode invoke \
+    -o localhost:7050 \
+    --ordererTLSHostnameOverride orderer.example.com \
+    --tls \
+    --cafile ${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem \
+    -C mychannel \
+    -n mychaincode \
+    --peerAddresses localhost:7051 \
+    --tlsRootCertFiles ${PWD}/organizations/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt \
+    --peerAddresses localhost:9051 \
+    --tlsRootCertFiles ${PWD}/organizations/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt \
+    -c '{"function":"TransferAsset","Args":["ast10","Nazmul"]}'
+
+
+Error: endorsement failure during invoke. response: status:500 message:"the asset ast10 does not exist" 
+Explanation: Asset id - "ast10" is not create ever in this blockchain network so it's not possibol to transfer ast10 to anyone. 
+When TransferAsset was invoked, the chaincode tried to read asset ast10 from the world state, but the asset was not found. 
+Therefore, the chaincode returned an error (status 500).
+
+See running node as docker container
+
+docker ps --format table{{.Names}}
+
+New channel creation
+./network.sh up createChannel -c mychannel2
+peer channel list
